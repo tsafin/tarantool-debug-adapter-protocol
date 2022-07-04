@@ -9,8 +9,31 @@ function Messages.ProtocolMessage(type)
     }
 end
 
--- we do not supposed to create DebugProtocol.Requests
--- It's client (vscode) responsibility
+-- DebugProtocol.Request
+function Messages.Request(command, arguments)
+    return {
+        -- ProtocolMessage
+        seq = 0,
+        type = 'request',
+
+        -- Request
+        command = command,
+        arguments = arguments,
+    }
+end
+
+-- DebugProtocol.Event
+function Messages.Event(event, body)
+    return {
+        -- ProtocolMessage
+        seq = 0,
+        type = 'event',
+
+        -- Event
+        event = event,
+        body = body,
+    }
+end
 
 -- DebugProtocol.Response
 function Messages.Response(request, message)
@@ -22,20 +45,8 @@ function Messages.Response(request, message)
         -- Response
         request_seq = request.seq,
         command = request.command,
-        message = message,
-        success = message ~= nil
-    }
-end
-
--- DebugProtocol.Event
-function Messages.Event(event, body)
-    return {
-        -- ProtocolMessage
-        seq = 0,
-        type = 'event',
-        -- Event
-        event = event,
-        body = body,
+        success = message ~= nil,
+        message = message ~= nil and message or 'cancelled',
     }
 end
 

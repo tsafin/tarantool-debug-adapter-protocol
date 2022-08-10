@@ -1,0 +1,5 @@
+dist/
+node_modules/
+.vs/
+.vscode/settings.json
+CMakeSettings.json

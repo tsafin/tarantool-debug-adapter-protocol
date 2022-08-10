@@ -22,6 +22,14 @@ indent_size = 4
 indent_style = space
 indent_size = 4
 
+[*.json]
+indent_style = space
+indent_size = 4
+
+[*.{ts,js}]
+indent_style = tab
+tab_width = 8
+
 [*.{h,c,cc}]
 indent_style = tab
 tab_width = 8

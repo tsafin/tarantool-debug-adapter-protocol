@@ -1,0 +1,206 @@
+{
+    "name": "tarantool-debug",
+    "version": "0.0.1",
+    "publisher": "Tarantool",
+    "description": "Local Tarantool Lua/LuaJIT debug adapter.",
+    "author": "tsafin@users.noreply.github.com",
+    "license": "MIT",
+    "engines": {
+        "vscode": "0.10.x"
+    },
+    "keywords": [
+        "lua",
+        "luajit",
+        "tarantool",
+        "cartridge",
+        "tdg"
+    ],
+    "private": true,
+    "categories": [
+        "Debuggers"
+    ],
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/tsafin/tarantool-debug-adapter-protocol.git"
+    },
+    "bugs": {
+        "url": "https://github.com/tsafin/tarantool-debug-adapter-protocol/issues"
+    },
+    "scripts": {
+        "compile": "tsc -p ./",
+        "lint": "eslint src --ext ts",
+        "typecheck": "tsc -p tsconfig.json --noEmit",
+        "build": "esbuild ./extension/extension.ts --bundle --tsconfig=./tsconfig.json --external:vscode --format=cjs --platform=node --outfile=dist/extension.js",
+        "watch": "npm run -S esbuild-base -- --sourcemap --sources-content=false --watch",
+        "package": "vsce package",
+        "publish": "vsce publish",
+        "publish-pre-release": "vsce publish --pre-release",
+        "vscode:prepublish": "rimraf dist && npm run -S esbuild-base -- --minify && npm run -S esbuild-web -- --minify",
+        "test": "npm run typecheck"
+    },
+    "devDependencies": {
+        "@types/glob": "^7.2.0",
+        "@types/mocha": "^9.1.0",
+        "@types/node": "^14.14.37",
+        "@types/vscode": "^1.66.0",
+        "@typescript-eslint/eslint-plugin": "^5.17.0",
+        "@typescript-eslint/parser": "^5.17.0",
+        "@vscode/debugadapter": "^1.55.1",
+        "@vscode/debugadapter-testsupport": "^1.55.1",
+        "await-notify": "^1.0.1",
+        "base64-js": "^1.5.1",
+        "esbuild": "^0.14.29",
+        "eslint": "^8.12.0",
+        "events": "^3.3.0",
+        "glob": "^7.2.0",
+        "mocha": "^9.2.2",
+        "path-browserify": "^1.0.1",
+        "rimraf": "^3.0.2",
+        "typescript": "^4.6.3",
+        "url": "^0.11.0",
+        "vsce": "^2.7.0"
+    },
+    "main": "./dist/extension.js",
+    "activationEvents": [
+        "onDebug"
+    ],
+    "contributes": {
+        "configuration": [
+            {
+                "title": "Tarantool Lua Debugger",
+                "properties": {
+                    "lua-local.interpreter": {
+                        "type": "string",
+                        "default": "build/src/tarantool",
+                        "description": "Path to Tarantool executable"
+                    }
+                }
+            }
+        ],
+        "breakpoints": [
+            {
+                "language": "lua"
+            }
+        ],
+        "debuggers": [
+            {
+                "type": "tarantool-dap",
+                "label": "Tarantool DAP",
+                "program": "build/tarantool-dap",
+                "runtime": "node",
+                "initialConfigurations": [
+                    {
+                        "name": "TDebug Tarantool Lua Debugger",
+                        "type": "tarantool-dap",
+                        "request": "launch",
+                        "program": {
+                            "tarantool": "/usr/bin/tarantool",
+                            "file": "${file}"
+                        }
+                    },
+                    {
+                        "name": "Custom Tarantool Lua Debugger",
+                        "type": "tarantool-dap",
+                        "request": "launch",
+                        "program": {
+                            "command": "command"
+                        },
+                        "args": []
+                    }
+                ],
+                "configurationAttributes": {
+                    "launch": {
+                        "properties": {
+                            "scriptRoots": {
+                                "type": "array",
+                                "items": {
+                                    "type": "string"
+                                },
+                                "description": "Alternate paths to find lua scripts"
+                            },
+                            "verbose": {
+                                "type": "boolean",
+                                "description": "Enable verbose output",
+                                "default": false
+                            },
+                            "stopOnEntry": {
+                                "type": "boolean",
+                                "description": "Pause debugging as soon as debugger attaches to program",
+                                "default": true
+                            },
+                            "cwd": {
+                                "type": "string",
+                                "description": "Working directory to launch Lua in",
+                                "default": "${workspaceFolder}"
+                            },
+                            "env": {
+                                "type": "object",
+                                "description": "Environment variables to set",
+                                "additionalProperties": {
+                                    "type": "string"
+                                }
+                            },
+                            "args": {
+                                "type": "array",
+                                "items": {
+                                    "type": "string"
+                                },
+                                "description": "Arguments to pass to the program",
+                                "default": []
+                            },
+                            "program": {
+                                "oneOf": [
+                                    {
+                                        "type": "object",
+                                        "properties": {
+                                            "tarantool": {
+                                                "type": "string",
+                                                "description": "Tarantool executabe",
+                                                "default": "lua"
+                                            },
+                                            "file": {
+                                                "type": "string",
+                                                "description": "The entry point file of the program",
+                                                "default": "${file}"
+                                            },
+                                            "communication": {
+                                                "enum": [
+                                                    "stdio",
+                                                    "pipe"
+                                                ],
+                                                "description": "Communication method between extension and debugger.",
+                                                "default": "stdio"
+                                            }
+                                        },
+                                        "additionalProperties": false
+                                    },
+                                    {
+                                        "type": "object",
+                                        "properties": {
+                                            "command": {
+                                                "type": "string",
+                                                "description": "The custom command to run"
+                                            },
+                                            "communication": {
+                                                "enum": [
+                                                    "stdio",
+                                                    "pipe"
+                                                ],
+                                                "description": "Communication method between extension and debugger.",
+                                                "default": "stdio"
+                                            }
+                                        },
+                                        "required": [
+                                            "command"
+                                        ],
+                                        "additionalProperties": false
+                                    }
+                                ]
+                            }
+                        }
+                    }
+                }
+            }
+        ]
+    }
+}

@@ -44,7 +44,7 @@ class DebugAdapterExecutableFactory
 		// use the executable specified in the package.json if it exists or determine it based on some other information (e.g. the session)
 		if (!executable) {
 			const command =
-				"/home/tsafin/datetime/tarantoolt/build/src/vscode-tdebug";
+				"//home/tsafin/debug/tarantool-debug-adapter-protocol/bins/readline.lua";
 			const args = ["some args", "another arg"];
 			const options = {
 				cwd: "working directory for executable",

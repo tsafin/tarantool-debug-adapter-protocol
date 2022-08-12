@@ -11,9 +11,9 @@
                 "${workspaceFolder}/debug-workspace"
             ],
             "outFiles": [
-                "${workspaceFolder}/**/*.js"
+                "${workspaceFolder}/dist/**/*.js"
             ],
-            // "preLaunchTask": "npm: watch"
+            "preLaunchTask": "${defaultBuildTask}"
         },
     ]
 }

@@ -22,7 +22,7 @@ export function activateTarantoolDap(context: vscode.ExtensionContext, factory: 
 			}
 			if (targetResource) {
 				vscode.debug.startDebugging(undefined, {
-					type: 'mock',
+					type: 'tarantool-dap',
 					name: 'Run File',
 					request: 'launch',
 					program: targetResource.fsPath
@@ -38,7 +38,7 @@ export function activateTarantoolDap(context: vscode.ExtensionContext, factory: 
 			}
 			if (targetResource) {
 				vscode.debug.startDebugging(undefined, {
-					type: 'mock',
+					type: 'tarantool-dap',
 					name: 'Debug File',
 					request: 'launch',
 					program: targetResource.fsPath,
@@ -61,12 +61,12 @@ export function activateTarantoolDap(context: vscode.ExtensionContext, factory: 
 		});
 	}));
 
-	// register a configuration provider for 'mock' debug type
+	// register a configuration provider for 'tarantool-dap' debug type
 	const provider = new TaranoolDapConfigurationProvider();
-	context.subscriptions.push(vscode.debug.registerDebugConfigurationProvider('mock', provider));
+	context.subscriptions.push(vscode.debug.registerDebugConfigurationProvider('tarantool-dap', provider));
 
-	// register a dynamic configuration provider for 'mock' debug type
-	context.subscriptions.push(vscode.debug.registerDebugConfigurationProvider('mock', {
+	// register a dynamic configuration provider for 'tarantool-dap' debug type
+	context.subscriptions.push(vscode.debug.registerDebugConfigurationProvider('tarantool-dap', {
 		provideDebugConfigurations(folder: WorkspaceFolder | undefined): ProviderResult<DebugConfiguration[]> {
 			return [
 				{
@@ -91,9 +91,9 @@ export function activateTarantoolDap(context: vscode.ExtensionContext, factory: 
 		}
 	}, vscode.DebugConfigurationProviderTriggerKind.Dynamic));
 
-	context.subscriptions.push(vscode.debug.registerDebugAdapterDescriptorFactory('mock', factory));
+	context.subscriptions.push(vscode.debug.registerDebugAdapterDescriptorFactory('tarantool-dap', factory));
 	if ('dispose' in factory) {
-		context.subscriptions.push(factory);
+		context.subscriptions.push(factory as unknown as { dispose(): any }); // WTF??
 	}
 
 	// override VS Code's default implementation of the debug hover
@@ -161,7 +161,7 @@ class TaranoolDapConfigurationProvider implements vscode.DebugConfigurationProvi
 		if (!config.type && !config.request && !config.name) {
 			const editor = vscode.window.activeTextEditor;
 			if (editor && editor.document.languageId === 'markdown') {
-				config.type = 'mock';
+				config.type = 'tarantool-dap';
 				config.name = 'Launch';
 				config.request = 'launch';
 				config.program = '${file}';

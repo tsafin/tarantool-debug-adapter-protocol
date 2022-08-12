@@ -8,7 +8,7 @@
 			"type": "tarantool-dap",
 			"request": "launch",
 			"name": "Debug debug.lua",
-			"program": "${workspaceFolder}/debug.lua",
+			"program": "${workspaceFolder}/debug-dbg.lua",
 			"stopOnEntry": true,
 			"trace": true
 		},
@@ -16,7 +16,7 @@
 			"type": "tarantool-dap",
 			"request": "attach",
 			"name": "Attach debug.lua",
-			"program": "${workspaceFolder}/debug.lua",
+			"program": "${workspaceFolder}/debug-dbg.lua",
 			"stopOnEntry": true,
 			"trace": true
 		}

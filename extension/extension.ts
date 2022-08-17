@@ -41,21 +41,19 @@ class DebugAdapterExecutableFactory
 	): ProviderResult<vscode.DebugAdapterDescriptor> {
 		// param "executable" contains the executable optionally specified in the package.json (if any)
 
-		// use the executable specified in the package.json if it exists or determine it based on some other information (e.g. the session)
-		if (!executable) {
-			const command =
-				"//home/tsafin/debug/tarantool-debug-adapter-protocol/bins/readline.lua";
-			const args = ["some args", "another arg"];
-			const options = {
-				cwd: "working directory for executable",
-				env: { envVariable: "some value" },
-			};
-			executable = new vscode.DebugAdapterExecutable(
-				command,
-				args,
-				options
-			);
-		}
+		// override automatically constructed executable
+		const command =
+			"/home/tsafin/debug/tarantool-debug-adapter-protocol/bins/tarantool";
+		const args = ["/home/tsafin/debug/tarantool-debug-adapter-protocol/bins/echojson", "another arg"];
+		const options = {
+			cwd: "/home/tsafin/debug/tarantool-debug-adapter-protocol/bins/",
+			env: { envVariable: "some value" },
+		};
+		executable = new vscode.DebugAdapterExecutable(
+			command,
+			args,
+			options
+		);
 
 		// make VS Code launch the DA executable
 		return executable;

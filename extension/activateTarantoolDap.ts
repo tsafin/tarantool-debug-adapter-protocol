@@ -45,19 +45,13 @@ export function activateTarantoolDap(context: vscode.ExtensionContext, factory: 
 					stopOnEntry: true
 				});
 			}
-		}),
-		vscode.commands.registerCommand('extension.tarantool-debug.toggleFormatting', (variable) => {
-			const ds = vscode.debug.activeDebugSession;
-			if (ds) {
-				ds.customRequest('toggleFormatting');
-			}
 		})
 	);
 
 	context.subscriptions.push(vscode.commands.registerCommand('extension.tarantool-debug.getProgramName', config => {
 		return vscode.window.showInputBox({
-			placeHolder: "Please enter the name of a markdown file in the workspace folder",
-			value: "readme.md"
+			placeHolder: "Please enter the name of a lua file in the workspace folder",
+			value: "debug.lua"
 		});
 	}));
 
@@ -95,58 +89,6 @@ export function activateTarantoolDap(context: vscode.ExtensionContext, factory: 
 	if ('dispose' in factory) {
 		context.subscriptions.push(factory as unknown as { dispose(): any }); // WTF??
 	}
-
-	// override VS Code's default implementation of the debug hover
-	// here we match only Mock "variables", that are words starting with an '$'
-	context.subscriptions.push(vscode.languages.registerEvaluatableExpressionProvider('markdown', {
-		provideEvaluatableExpression(document: vscode.TextDocument, position: vscode.Position): vscode.ProviderResult<vscode.EvaluatableExpression> {
-
-			const VARIABLE_REGEXP = /\$[a-z][a-z0-9]*/ig;
-			const line = document.lineAt(position.line).text;
-
-			let m: RegExpExecArray | null;
-			while (m = VARIABLE_REGEXP.exec(line)) {
-				const varRange = new vscode.Range(position.line, m.index, position.line, m.index + m[0].length);
-
-				if (varRange.contains(position)) {
-					return new vscode.EvaluatableExpression(varRange);
-				}
-			}
-			return undefined;
-		}
-	}));
-
-	// override VS Code's default implementation of the "inline values" feature"
-	context.subscriptions.push(vscode.languages.registerInlineValuesProvider('markdown', {
-
-		provideInlineValues(document: vscode.TextDocument, viewport: vscode.Range, context: vscode.InlineValueContext) : vscode.ProviderResult<vscode.InlineValue[]> {
-
-			const allValues: vscode.InlineValue[] = [];
-
-			for (let l = viewport.start.line; l <= context.stoppedLocation.end.line; l++) {
-				const line = document.lineAt(l);
-				var regExp = /\$([a-z][a-z0-9]*)/ig;	// variables are words starting with '$'
-				do {
-					var m = regExp.exec(line.text);
-					if (m) {
-						const varName = m[1];
-						const varRange = new vscode.Range(l, m.index, l, m.index + varName.length);
-
-						// some literal text
-						//allValues.push(new vscode.InlineValueText(varRange, `${varName}: ${viewport.start.line}`));
-
-						// value found via variable lookup
-						allValues.push(new vscode.InlineValueVariableLookup(varRange, varName, false));
-
-						// value determined via expression evaluation
-						//allValues.push(new vscode.InlineValueEvaluatableExpression(varRange, varName));
-					}
-				} while (m);
-			}
-
-			return allValues;
-		}
-	}));
 }
 
 class TaranoolDapConfigurationProvider implements vscode.DebugConfigurationProvider {
@@ -160,7 +102,7 @@ class TaranoolDapConfigurationProvider implements vscode.DebugConfigurationProvi
 		// if launch.json is missing or empty
 		if (!config.type && !config.request && !config.name) {
 			const editor = vscode.window.activeTextEditor;
-			if (editor && editor.document.languageId === 'markdown') {
+			if (editor && editor.document.languageId === 'lua') {
 				config.type = 'tarantool-dap';
 				config.name = 'Launch';
 				config.request = 'launch';

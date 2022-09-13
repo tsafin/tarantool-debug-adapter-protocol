@@ -12,7 +12,11 @@ import { WorkspaceFolder, DebugConfiguration, ProviderResult, CancellationToken 
 // import { TarantoolDapSession } from './mockDebug';
 // import { FileAccessor } from './mockRuntime';
 
-export function activateTarantoolDap(context: vscode.ExtensionContext, factory: vscode.DebugAdapterDescriptorFactory) {
+export function activateTarantoolDap(
+	context: vscode.ExtensionContext,
+	factory: vscode.DebugAdapterDescriptorFactory) 
+{
+	console.log("activateTarantoolDap", factory);
 
 	context.subscriptions.push(
 		vscode.commands.registerCommand('extension.tarantool-debug.runEditorContents', (resource: vscode.Uri) => {
@@ -99,6 +103,7 @@ class TaranoolDapConfigurationProvider implements vscode.DebugConfigurationProvi
 	 */
 	resolveDebugConfiguration(folder: WorkspaceFolder | undefined, config: DebugConfiguration, token?: CancellationToken): ProviderResult<DebugConfiguration> {
 
+		console.log("resolveDebugConfiguration", folder);
 		// if launch.json is missing or empty
 		if (!config.type && !config.request && !config.name) {
 			const editor = vscode.window.activeTextEditor;
@@ -112,10 +117,12 @@ class TaranoolDapConfigurationProvider implements vscode.DebugConfigurationProvi
 		}
 
 		if (!config.program) {
+			console.log("Cannot find a program to debug");
 			return vscode.window.showInformationMessage("Cannot find a program to debug").then(_ => {
 				return undefined;	// abort launch
 			});
 		}
+		console.log(config);
 
 		return config;
 	}

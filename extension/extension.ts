@@ -15,10 +15,12 @@
 
 "use strict";
 
+import { exec } from "child_process";
 import * as vscode from "vscode";
 import { ProviderResult } from "vscode";
 // import { TarantoolDapSession } from './mockDebug';
 import { activateTarantoolDap } from "./activateTarantoolDap";
+import { DebugProxy } from "debugProxy";
 
 export function activate(context: vscode.ExtensionContext) {
 	// run the debug adapter as a separate process
@@ -39,6 +41,7 @@ class DebugAdapterExecutableFactory
 		_session: vscode.DebugSession,
 		executable: vscode.DebugAdapterExecutable | undefined
 	): ProviderResult<vscode.DebugAdapterDescriptor> {
+		console.log('createDebugAdapterDescriptor', _session, executable);
 		// param "executable" contains the executable optionally specified in the package.json (if any)
 
 		// override automatically constructed executable
@@ -54,8 +57,10 @@ class DebugAdapterExecutableFactory
 			args,
 			options
 		);
+		console.log(executable);
 
 		// make VS Code launch the DA executable
 		return executable;
 	}
 }
+

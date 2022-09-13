@@ -1,24 +1,18 @@
 {
-	// Use IntelliSense to learn about possible attributes.
-	// Hover to view descriptions of existing attributes.
-	// For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
-	"version": "0.2.0",
-	"configurations": [
-		{
-			"type": "tarantool-dap",
-			"request": "launch",
-			"name": "Debug debug.lua",
-			"program": "${workspaceFolder}/debug-dbg.lua",
-			"stopOnEntry": true,
-			"trace": true
-		},
-		{
-			"type": "tarantool-dap",
-			"request": "attach",
-			"name": "Attach debug.lua",
-			"program": "${workspaceFolder}/debug-dbg.lua",
-			"stopOnEntry": true,
-			"trace": true
-		}
-	]
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "tarantool-dap",
+            "request": "launch",
+            "name": "Debug debug.lua",
+            "program": {
+                "tarantool": "/home/tsafin/datetime/tarantoolt/build/src/tarantool",
+                "file": "${workspaceFolder}/debug-dbg.lua"
+            },
+            "verbose": true
+        }
+    ]
 }

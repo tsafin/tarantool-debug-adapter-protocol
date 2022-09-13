@@ -71,7 +71,7 @@
             {
                 "title": "Tarantool Lua Debugger",
                 "properties": {
-                    "lua-local.interpreter": {
+                    "tarantool.executable": {
                         "type": "string",
                         "default": "build/src/tarantool",
                         "description": "Path to Tarantool executable"
@@ -88,7 +88,7 @@
             {
                 "type": "tarantool-dap",
                 "label": "Tarantool DAP",
-                "program": "build/tarantool-dap",
+                "program": "dist/extension.js",
                 "runtime": "node",
                 "initialConfigurations": [
                     {
@@ -124,11 +124,6 @@
                                 "type": "boolean",
                                 "description": "Enable verbose output",
                                 "default": false
-                            },
-                            "stopOnEntry": {
-                                "type": "boolean",
-                                "description": "Pause debugging as soon as debugger attaches to program",
-                                "default": true
                             },
                             "cwd": {
                                 "type": "string",

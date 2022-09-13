@@ -1,0 +1,17 @@
+{"name": "tarantool-debug"}
+{"version": "0.0.1"}
+{"publisher": "Tarantool"}
+{"description": "Local Tarantool Lua/LuaJIT debug adapter."}
+{"author": { "name": "tsafin@users.noreply.github.com"}}
+{"license": "MIT"}
+{"keywords": [ "lua", "luajit", "tarantool", "cartridge", "tdg" ]}
+{"engines": { "vscode": "^1.44.0", "node": ">=10" }}
+{"private": true}
+{"categories": [ "Debuggers" ]}
+{"repository": { "type": "git", "url": "https://github.com/tsafin/tarantool-debug-adapter-protocol.git" }}
+{"bugs": { "url": "https://github.com/tsafin/tarantool-debug-adapter-protocol/issues" }}
+{"scripts": { "compile": "tsc -p ./", "lint": "eslint extension --ext ts", "typecheck": "tsc -p tsconfig.json --noEmit", "esbuild-base": "esbuild ./extension/extension.ts --bundle --tsconfig=./tsconfig.json --external:vscode --format=cjs --platform=node --outfile=dist/extension.js", "watch": "npm run -S esbuild-base -- --sourcemap --sources-content=false --watch", "build": "npm run -S esbuild-base -- --sourcemap --sources-content=false", "package": "vsce package", "publish": "vsce publish", "publish-pre-release": "vsce publish --pre-release", "vscode:prepublish": "rimraf dist && npm run -S esbuild-base -- --minify && npm run -S esbuild-web -- --minify", "test": "npm run typecheck" }}
+{"dependencies": { "source-map": "0.6.1", "@vscode/debugadapter": "1.55.1" }}
+{"devDependencies": { "@types/node": "14.x", "@types/vscode": "^1.44.0", "@typescript-eslint/eslint-plugin": "^5.17.0", "@typescript-eslint/parser": "^5.17.0", "@vscode/debugadapter": "^1.55.1", "@vscode/debugadapter-testsupport": "^1.55.1", "await-notify": "^1.0.1", "base64-js": "^1.5.1", "esbuild": "^0.14.29", "eslint": "^8.12.0", "events": "^3.3.0", "rimraf": "^3.0.2", "typescript": "^4.6.3", "vsce": "^2.7.0" }}
+{"main": "./dist/extension.js"}
+{"activationEvents": [ "onDebug" ]}
